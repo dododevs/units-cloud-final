@@ -1,6 +1,7 @@
 secrets/*
 locust/*
 nginx/cert/*
+haproxy/certs/*
 
 # Created by https://www.toptal.com/developers/gitignore/api/python,venv,virtualenv
 # Edit at https://www.toptal.com/developers/gitignore?templates=python,venv,virtualenv

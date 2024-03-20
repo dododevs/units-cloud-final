@@ -1,0 +1,63 @@
+version: '2'
+
+volumes:
+  nextcloud:
+  db:
+
+services:
+
+  db:
+    image: postgres
+    restart: always
+    shm_size: 128mb
+    volumes:
+      - db:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER_FILE=/run/secrets/nc-postgres-user
+      - POSTGRES_PASSWORD_FILE=/run/secrets/nc-postgres-passwd
+      - POSTGRES_DB=nextcloud
+    secrets:
+      - nc-postgres-user
+      - nc-postgres-passwd
+
+  app:
+    image: nextcloud
+    restart: always
+    links:
+      - db
+    depends_on:
+      - db
+    volumes:
+      - nextcloud:/var/www/html
+    environment:
+      - POSTGRES_HOST=db
+      - POSTGRES_DB=nextcloud
+      - POSTGRES_USER_FILE=/run/secrets/nc-postgres-user
+      - POSTGRES_PASSWORD_FILE=/run/secrets/nc-postgres-passwd
+      - NEXTCLOUD_ADMIN_USER_FILE=/run/secrets/nc-admin-user
+      - NEXTCLOUD_ADMIN_PASSWORD_FILE=/run/secrets/nc-admin-passwd
+    secrets:
+      - nc-admin-user
+      - nc-admin-passwd
+      - nc-postgres-user
+      - nc-postgres-passwd
+
+  nginx:
+    image: nginx:latest
+    volumes:
+      - ./nginx/cert:/etc/nginx/cert
+      - ./nginx/conf.d:/etc/nginx/conf.d
+    ports:
+      - 443:443
+    links:
+      - app
+
+secrets:
+  nc-admin-user:
+    file: ./secrets/nc-admin-user.txt
+  nc-admin-passwd:
+    file: ./secrets/nc-admin-passwd.txt
+  nc-postgres-user:
+    file: ./secrets/nc-postgres-user.txt
+  nc-postgres-passwd:
+    file: ./secrets/nc-postgres-passwd.txt

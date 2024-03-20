@@ -7,6 +7,7 @@ volumes:
 services:
 
   db:
+    hostname: db
     image: postgres
     restart: always
     shm_size: 128mb
@@ -20,37 +21,60 @@ services:
       - nc-postgres-user
       - nc-postgres-passwd
 
-  app:
-    image: nextcloud
-    restart: always
-    links:
-      - db
-    depends_on:
-      - db
-    volumes:
-      - nextcloud:/var/www/html
-    environment:
-      - POSTGRES_HOST=db
-      - POSTGRES_DB=nextcloud
-      - POSTGRES_USER_FILE=/run/secrets/nc-postgres-user
-      - POSTGRES_PASSWORD_FILE=/run/secrets/nc-postgres-passwd
-      - NEXTCLOUD_ADMIN_USER_FILE=/run/secrets/nc-admin-user
-      - NEXTCLOUD_ADMIN_PASSWORD_FILE=/run/secrets/nc-admin-passwd
-    secrets:
-      - nc-admin-user
-      - nc-admin-passwd
-      - nc-postgres-user
-      - nc-postgres-passwd
+  # app1:
+  #   hostname: nc1
+  #   image: nextcloud
+  #   restart: always
+  #   links:
+  #     - db
+  #   depends_on:
+  #     - db
+  #   volumes:
+  #     - nextcloud:/var/www/html
+  #   environment:
+  #     - POSTGRES_HOST=db
+  #     - POSTGRES_DB=nextcloud
+  #     - POSTGRES_USER_FILE=/run/secrets/nc-postgres-user
+  #     - POSTGRES_PASSWORD_FILE=/run/secrets/nc-postgres-passwd
+  #     - NEXTCLOUD_ADMIN_USER_FILE=/run/secrets/nc-admin-user
+  #     - NEXTCLOUD_ADMIN_PASSWORD_FILE=/run/secrets/nc-admin-passwd
+  #   secrets:
+  #     - nc-admin-user
+  #     - nc-admin-passwd
+  #     - nc-postgres-user
+  #     - nc-postgres-passwd
 
-  nginx:
-    image: nginx:latest
+  # app2:
+  #   hostname: nc2
+  #   image: nextcloud
+  #   restart: always
+  #   links:
+  #     - db
+  #   depends_on:
+  #     - db
+  #   volumes:
+  #     - nextcloud:/var/www/html
+  #   environment:
+  #     - POSTGRES_HOST=db
+  #     - POSTGRES_DB=nextcloud
+  #     - POSTGRES_USER_FILE=/run/secrets/nc-postgres-user
+  #     - POSTGRES_PASSWORD_FILE=/run/secrets/nc-postgres-passwd
+  #     - NEXTCLOUD_ADMIN_USER_FILE=/run/secrets/nc-admin-user
+  #     - NEXTCLOUD_ADMIN_PASSWORD_FILE=/run/secrets/nc-admin-passwd
+  #   secrets:
+  #     - nc-admin-user
+  #     - nc-admin-passwd
+  #     - nc-postgres-user
+  #     - nc-postgres-passwd
+
+  haproxy:
+    image: haproxy:latest
     volumes:
-      - ./nginx/cert:/etc/nginx/cert
-      - ./nginx/conf.d:/etc/nginx/conf.d
+      - ./haproxy/certs:/certs
+      - ./haproxy/haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg
     ports:
       - 443:443
-    links:
-      - app
+      - 8090:8090
 
 secrets:
   nc-admin-user:
