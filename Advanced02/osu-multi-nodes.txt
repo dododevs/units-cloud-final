@@ -1,0 +1,58 @@
+Warning: Permanently added '[osu-worker-1.osu.default.svc]:2222,[10.42.1.105]:2222' (ECDSA) to the list of known hosts.
+Warning: Permanently added '[osu-worker-0.osu.default.svc]:2222,[10.42.3.56]:2222' (ECDSA) to the list of known hosts.
+# OSU MPI Latency Test v7.3
+# Size          Latency (us)
+# Datatype: MPI_CHAR.
+1                      50.03
+2                      51.40
+4                      50.56
+8                      56.80
+16                     55.33
+32                     49.99
+64                     51.18
+128                    51.64
+256                    54.24
+512                    63.76
+1024                   51.98
+2048                   77.66
+4096                   83.38
+8192                  100.21
+16384                 132.20
+32768                 204.57
+65536                 439.01
+131072                607.31
+262144               1181.21
+524288               1491.34
+1048576              2636.54
+2097152              4942.62
+4194304              9414.47
+##########################
+##########################
+##########################
+Warning: Permanently added '[osu-worker-1.osu.default.svc]:2222,[10.42.1.105]:2222' (ECDSA) to the list of known hosts.
+Warning: Permanently added '[osu-worker-0.osu.default.svc]:2222,[10.42.3.56]:2222' (ECDSA) to the list of known hosts.
+
+# OSU MPI Broadcast Latency Test v7.3
+# Datatype: MPI_CHAR.
+# Size       Avg Latency(us)
+1                      77.99
+2                      78.60
+4                      83.14
+8                      78.02
+16                     78.16
+32                     78.98
+64                     79.16
+128                    78.09
+256                    79.18
+512                    77.34
+1024                   78.75
+2048                   81.45
+4096                   90.98
+8192                   92.17
+16384                 104.62
+32768                 166.08
+65536                 351.55
+131072                448.76
+262144                662.56
+524288               1151.63
+1048576              2064.73

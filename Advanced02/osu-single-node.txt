@@ -1,0 +1,58 @@
+Warning: Permanently added '[osu-worker-0.osu.default.svc]:2222,[10.42.4.25]:2222' (ECDSA) to the list of known hosts.
+Warning: Permanently added '[osu-worker-1.osu.default.svc]:2222,[10.42.4.26]:2222' (ECDSA) to the list of known hosts.
+# OSU MPI Latency Test v7.3
+# Size          Latency (us)
+# Datatype: MPI_CHAR.
+1                      17.74
+2                      18.55
+4                      17.83
+8                      17.88
+16                     18.87
+32                     17.91
+64                     17.70
+128                    18.40
+256                    18.24
+512                    18.80
+1024                   19.08
+2048                   22.12
+4096                   25.13
+8192                   27.98
+16384                  39.62
+32768                  64.47
+65536                 142.76
+131072                141.38
+262144                193.18
+524288                328.40
+1048576               563.48
+2097152               980.33
+4194304              1905.52
+##########################
+##########################
+##########################
+Warning: Permanently added '[osu-worker-1.osu.default.svc]:2222,[10.42.4.26]:2222' (ECDSA) to the list of known hosts.
+Warning: Permanently added '[osu-worker-0.osu.default.svc]:2222,[10.42.4.25]:2222' (ECDSA) to the list of known hosts.
+
+# OSU MPI Broadcast Latency Test v7.3
+# Datatype: MPI_CHAR.
+# Size       Avg Latency(us)
+1                      22.94
+2                      21.71
+4                      21.42
+8                      22.78
+16                     21.54
+32                     21.28
+64                     21.58
+128                    22.55
+256                    21.23
+512                    27.53
+1024                   25.29
+2048                   26.03
+4096                   27.65
+8192                   31.01
+16384                  29.67
+32768                  39.52
+65536                 117.83
+131072                160.55
+262144                201.03
+524288                318.92
+1048576               536.55
