@@ -1,0 +1,45 @@
+apiVersion: kubeflow.org/v2beta1
+kind: MPIJob
+metadata:
+  name: osu
+spec:
+  slotsPerWorker: 1
+  runPolicy:
+    cleanPodPolicy: Running
+  mpiReplicaSpecs:
+    Launcher:
+      replicas: 1
+      template:
+        metadata:
+          labels:
+            app: osu
+        spec:
+          containers:
+          - image: localhost:5000/mpi-osu:latest
+            name: mpi-osu-launcher
+            command:
+            - /entrypoint.sh
+          #  securityContext:
+          #   runAsUser: 1000
+    Worker:
+      replicas: 2
+      template:
+        metadata:
+          labels:
+            app: osu
+        spec:
+          containers:
+          - image: localhost:5000/mpi-osu:latest
+            name: mpi-osu-worker
+            # securityContext:
+            #   runAsUser: 1000
+          affinity:
+            podAffinity:
+              requiredDuringSchedulingIgnoredDuringExecution:
+              - labelSelector:
+                  matchExpressions:
+                  - key: "app"
+                    operator: In
+                    values:
+                    - osu
+                topologyKey: "kubernetes.io/hostname"
