@@ -1,4 +1,4 @@
-# Using Nextcloud for a user-friendly, containerizable, scalable storage system
+# Cloud Basic 2024 - Exercise 1: Using Nextcloud for a user-friendly, containerizable, scalable storage system
 
 ## Introduction
 
@@ -258,3 +258,51 @@ As expected, no remarkable difference can be seen as both instances are running 
 ![Load balancing](images/2024-03-20-014501_hyprshot.png)
 
 Even though not effective in improving performance overall, it can be observed through HAproxy statistics panel that the load balancing strategy is indeed working as expected, distributing the load across multiple, independent servers spawned on-the-fly, all referring to the same Nextcloud instance.
+
+# Cloud Advanced 2024 - Exercise 1 (Nextcloud @ Kubernetes)
+
+Let's investigate the possibility to extend the previously presented solution by deploying a similar service to a cluster of nodes. In order to achieve such goal, a few changes are needed to the analyzed infrastructure, allowing to setup a Kubernetes nodes cluster.
+
+As a Proof of Concept, a single node worker has been deployed, while another one served as the control plane. For the sake of the presented implementation, two Virtual Machines have been created on a Proxmox environment. Both have been initialized with the same (virtual) hardware specs (1 CPU, 2048MB of RAM, 32 GiB of disk storage) and have been interconnected with a bridged network that binds them to an Ethernet link. also providing access to the Internet. A static IP is used for connecting the guest OS to such network. The chosen guest OS is the latest available LTS version of Ubuntu Server, i.e. 22.04 at the time of writing.
+
+The chosen Kubernetes distribution for bootstrapping and managing the cluster is [k3s](https://k3s.io/). K3s's server-agent topology is summarized in the following map.
+
+![K3s topology](images/k3s.png)
+
+As can be seen, every node has some fundamental shared components, such as the Kubelet and the inter-node network and uses the same container engine, i.e. `containerd`, to spawn and maintain pods, i.e. groups of containers. The default network implementation used by K3s is Flannel. The main strengths of K3s are its ease of deployability, lightweightness and reduced complexity, when compared to other more extended alternatives.
+
+## Implementation
+
+The proposed implementation is based on the [Helm chart](https://github.com/nextcloud/helm/blob/main/charts/nextcloud/README.md) made available by [Nextcloud](https://nextcloud.github.io/helm/). The chart is configured before deployment through the `values.yml` file, which allows to customize the installation of Nextcloud and enable additional components. 
+
+In this case, an **nginx** reverse proxy is used to expose the Nextcloud app, which in turn uses an fpm php server internally. Using nginx makes it possible to customize the HTTP(S) configuration and, for instance, add support for the TLS/SSL layer. The Nextcloud instance is configured through the use of Kubernetes secrets to store admin credentials. The backing database of choice is **PostgreSQL**, also configured using secrets and deployed in a separate pod, locally bound to the Nextcloud pod. For the sake of this PoC, redis caching was not enabled.
+
+External access to the cluster is configured through a **service** of type Load Balancer. Although Kubernetes does not include a default load balancer, K3s does ship with so-called `ServiceLB`, which allows to expose the cluster to external HTTP(S) access. The use of Ingress or Gateway API was therefore not needed.
+
+Persistent storage for Nextcloud and PostgreSQL was provisioned with Persistent Volume Claims (PVCs), as shown in the README.
+
+## Solution strenghts and limitations discussion
+
+The main point in implementing a software solution as a Kubernetes cluster, with respect to a single-host containerized solution like Docker, is the scalabity- and high-availability-readiness of such a solution. A Kubernetes cluster can easily and quickly scale both vertically (allocating more resources for each pod and/or changing the mapping strategy) and horizontally (incrementing the number of pods and/or nodes in the cluster), without the need to change the entire infrastructure. Redundancy and therefore high-availability are also built into Kubernetes by default, with its main goal being to maintain the desidered status of the cluster through rescheduling and automatic healing. Such features are not readily available with a containerized solution like Docker, which (at its core) runs on a single machine, which therefore constitutes a single point of failure, and has less room for expandability and quick scalability without substantial changes to the topology. Moreover, solutions with Kubernetes are orchestrated, eliminating the need to maintain a synchronization and communication pattern among different nodes. The flexibility and overall better efficacy of Kubernetes as an infrastructural choice naturally comes with a cost: complexity and resource consumption. A containerized solution can be deployed on as little as a single node (without any particular requirements in terms of specs), while a well-suited Kubernetes solution requires multiple interconnected nodes which run specialized orchestration software on top of the containerization technology of choice, introducing additional overhead. A Kubernetes infrastructure is also quite complex in nature, with many different coordinated components to be properly configured and adjusted to the specific use case.
+
+Overall, depending on the size and complexity of the sought-after solution and its indended use and installation scenario, it might be more appropriate to use a simpler yet less reliable, available and scalable containerized solution like Docker or a more complex, high maintenance and demanding clustered solution like Kubernetes.
+
+### High-availability limitations of the presented implementation
+
+The presented solution is of course far from a production-ready highly-available setup. With a single worker node and the general limitations of the employed architecture (e.g. storage, as outlined in the following section) it does not bear much difference to running Nextcloud on one's personal computer without attaching any storage nor configuring any redundancy or possibility to reach it from the outside world.
+
+Some steps that should be taken to improve such setup could be, for instance:
+
+- _Setting up a larger cluster on dedicated hardware with a suitable number of nodes_: this would guarantee **redundancy** with more than one node being able to serve code and data and **load balance**, with the possibility of serving a larger number of users, distributing the load among more workers
+
+- _Configuring and securing access from the outside world_, meaning **reachability** and **safety**, obtained properly configuring Ingress or Gateway and implementing security measures such as connection and file encryption 
+
+- _Decoupling the cluster from local resources_, like storage, improving quick **scalability**, already facilitated by the Helm chart supporting HPA (Horizontal Pod Autoscaler)
+
+- _Improving caching_, with file, database and request (Redis) caching
+
+### Storage limitations of the presented implementation
+
+Although more easily scalable in nature, a Kubernetes solution might have limitations due to its implementation details. For the sake of this implementation, for example, the utilized backend storage for database and Nextcloud installation is `local-path` (as outlined in the README as well), which binds such storage mountpoints to local paths on some node of the cluster. This solution is clearly demonstrational and offers a great limitation both to the scalability and to the reliability of the entire setup. A local path on a node is not a redundant solution, therefore constituting a single point of failure. It is also poorly scalable without allocating more resources on the node(s) themselves (if possible).
+
+A better solution would be to use dynamically allocated storage, either on-premise (through the use of a distributed filesystem for instance) or outsourced to a third-party, as discussed in a previous section.  
