@@ -383,7 +383,10 @@ resources: {}
 ## Ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#container-probes
 ##
 livenessProbe:
-  enabled: false
+  httpGet:
+    path: /
+    port: 8080
+  enabled: true
   initialDelaySeconds: 10
   periodSeconds: 10
   timeoutSeconds: 5
