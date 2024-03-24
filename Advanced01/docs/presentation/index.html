@@ -1,0 +1,564 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+		<title>Cloud Computing 2024</title>
+
+    <!-- styles -->
+		<link rel="stylesheet" href="dist/reset.css">
+		<link rel="stylesheet" href="dist/reveal.css">
+		<link rel="stylesheet" href="dist/theme/white.css">
+		<link rel="stylesheet" href="plugin/highlight/monokai.css">
+    <link rel="stylesheet" href="dist/presentation.css">
+
+    <!-- fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Anybody:wght@300;400;500;600;700;900&family=Inter:wght@400;500;600;700;800;900&family=Livvic:wght@300;400;500;600;700&family=Roboto:ital,wght@0,400;0,500;0,700;0,900;1,400&display=swap" rel="stylesheet">
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+        <!-- slide 1 -->
+				<section class="slide">
+          <div class="slide">
+            <small class="aexp muted">Cloud Computing 2023/24 Final Assignment</small>
+            <h3 class="inter" style="margin-top: 2rem;">Deploying and testing a cloud infrastructure:<br>Nextcloud and MPI benchmarks</h3>
+            <small style="margin-top: 2.6rem;">Scientific and Data Intensive Computing &bull; Andrea Esposito [SM3600005]</small>
+          </div>
+        </section>
+
+        <!-- slide 2 -->
+				<section class="slide">
+          <div class="flex-row" style="position: absolute; bottom: 2.5rem; right: 2.5rem; justify-content: end; align-items: center;">
+            <img src="img/nuovo-logo_units.jpg" style="height: 3rem;"/>
+          </div>
+          <small class="aexp" style="position: absolute; left: 4rem; bottom: 4rem;">EXERCISE 1: GOAL</small>
+          <div class="slide">
+            <small class="aexp">Deploying a containerized storage system<br>with production-ready application features</small>
+            <small style="margin-top: 3rem;"><ul>
+              <li style="margin-bottom: 0.6rem;">User management</li>
+              <small class="aexp">Login, registration, permissions, administration</small>
+              <li style="margin-bottom: 0.6rem;">File storage</li>
+              <small class="aexp">Private space, upload, download, file management</small>
+              <li style="margin-bottom: 0.6rem;">End-user experience</li>
+              <small class="aexp">Graphical interface to access and use the system</small>
+            </ul></small> 
+          </div>
+        </section>
+
+        <!-- slide 3 -->
+				<section class="slide">
+          <div class="flex-row" style="position: absolute; bottom: 2.5rem; right: 2.5rem; justify-content: end; align-items: center;">
+            <img src="img/nuovo-logo_units.jpg" style="height: 3rem;"/>
+          </div>
+          <small class="aexp" style="position: absolute; left: 4rem; bottom: 4rem;">EXERCISE 1: GOAL</small>
+          <div class="slide">
+            <small class="aexp">Deploying a containerized storage system<br>with production-ready infrastructural features</small>
+            <small style="margin-top: 3rem;"><ul>
+              <li style="margin-bottom: 0.6rem;">Reproducibility</li>
+              <small class="aexp">Standardized tools and deployment process through configuration files</small>
+              <li style="margin-bottom: 0.6rem;">Accessibility</li>
+              <small class="aexp">Mediated public access</small>
+              <li style="margin-bottom: 0.6rem;">Scalability</li>
+              <small class="aexp">Ready to manage increased load, users, storage</small>
+              <li style="margin-bottom: 0.6rem;">Security</li>
+              <small class="aexp">Data and communication safeguard</small>
+            </ul></small> 
+          </div>
+        </section>
+
+        <!-- slide 4 -->
+				<section class="slide">
+          <div class="flex-row" style="position: absolute; bottom: 2.5rem; right: 2.5rem; justify-content: end; align-items: center;">
+            <img src="img/nuovo-logo_units.jpg" style="height: 3rem;"/>
+          </div>
+          <small class="aexp" style="position: absolute; left: 4rem; bottom: 4rem;">EXERCISE 1: IMPLEMENTATION</small>
+          <div class="slide">
+            <small class="aexp">CHOSEN SOLUTION</small>
+            <div class="flex-row" style="align-items: center;">
+              <img src="img/nc.svg" style="height: 8rem;"/>
+              &nbsp;&nbsp;+&nbsp;&nbsp;
+              <img src="img/docker.png" style="height: 8rem;"/>
+            </div>
+          </div>
+        </section>
+
+        <!-- slide 5 -->
+				<section class="slide">
+          <div class="flex-row" style="position: absolute; bottom: 2.5rem; right: 2.5rem; justify-content: end; align-items: center;">
+            <img src="img/nuovo-logo_units.jpg" style="height: 3rem;"/>
+          </div>
+          <small class="aexp" style="position: absolute; left: 4rem; bottom: 4rem;">EXERCISE 1: IMPLEMENTATION</small>
+          <div class="slide">
+            <small class="aexp">ARCHITECTURE TOPOLOGY</small>
+            <img src="img/nc_basic.png" style="width: 60rem;"/>
+          </div>
+        </section>
+
+         <!-- slide 6 -->
+				<section class="slide">
+          <div class="flex-row" style="position: absolute; bottom: 2.5rem; right: 2.5rem; justify-content: end; align-items: center;">
+            <img src="img/nuovo-logo_units.jpg" style="height: 3rem;"/>
+          </div>
+          <small class="aexp" style="position: absolute; left: 4rem; bottom: 4rem;">EXERCISE 1: DISCUSSION</small>
+          <div class="slide">
+            <div class="slide">
+              <small class="aexp">IMPLEMENTATION CHOICES</small>
+              <small style="margin-top: 3rem;"><ul>
+                <li style="margin-bottom: 0.6rem;">Docker + Docker Compose</li>
+                <small class="aexp">Easy-to-use container API and poor man's orchestrator</small>
+                <li style="margin-bottom: 0.6rem;">Nextcloud</li>
+                <small class="aexp">Complete and highly-customizable storage solution</small>
+                <li style="margin-bottom: 0.6rem;">HAProxy</li>
+                <small class="aexp">Decoupled and configurable external access with load balancing</small>
+                <li style="margin-bottom: 0.6rem;">PostgreSQL</li>
+                <small class="aexp">Efficient and ready for further upscaling</small>
+              </ul></small> 
+            </div>
+          </div>
+        </section>
+
+         <!-- slide 7 -->
+				<section class="slide">
+          <div class="flex-row" style="position: absolute; bottom: 2.5rem; right: 2.5rem; justify-content: end; align-items: center;">
+            <img src="img/nuovo-logo_units.jpg" style="height: 3rem;"/>
+          </div>
+          <small class="aexp" style="position: absolute; left: 4rem; bottom: 4rem;">EXERCISE 1: DISCUSSION</small>
+          <div class="slide">
+            <div class="slide">
+              <small class="aexp">ARCHITECTURAL CHOICES</small>
+              <small style="margin-top: 3rem;"><ul>
+                <li style="margin-bottom: 0.6rem;">Local persistent storage</li>
+                <small class="aexp">Same for all instances, using Docker volumes</small>
+                <li style="margin-bottom: 0.6rem;">Containerized database</li>
+                <small class="aexp">Independent and connected to all application instance(s)</small>
+                <li style="margin-bottom: 0.6rem;">Access through reverse proxy</li>
+                <small class="aexp">Secured and load balanced (when multiple instances are available)</small>
+              </ul></small> 
+            </div>
+          </div>
+        </section>
+
+        <!-- slide 8 -->
+				<section class="slide">
+          <div class="flex-row" style="position: absolute; bottom: 2.5rem; right: 2.5rem; justify-content: end; align-items: center;">
+            <img src="img/nuovo-logo_units.jpg" style="height: 3rem;"/>
+          </div>
+          <small class="aexp" style="position: absolute; left: 4rem; bottom: 4rem;">EXERCISE 1: DISCUSSION</small>
+          <div class="slide">
+            <div class="slide">
+              <small class="aexp">SECURITY MEASURES</small>
+              <small style="margin-top: 3rem;"><ul>
+                <li style="margin-bottom: 0.6rem;">Local network</li>
+                <small class="aexp">All services sandboxed, only reverse proxy exposed</small>
+                <li style="margin-bottom: 0.6rem;">Valid domain + SSL certificate</li>
+                <small class="aexp">Guaranteeing authenticity, safeguarding credentials</small>
+                <li style="margin-bottom: 0.6rem;">Access through reverse proxy</li>
+                <small class="aexp">Secured and load balanced (when multiple instances are available)</small>
+                <li style="margin-bottom: 0.6rem;">Data encryption</li>
+                <small class="aexp">Upon upload, seamless for the end-user</small>
+              </ul></small> 
+            </div>
+          </div>
+        </section>
+
+        <!-- slide 9 -->
+				<section class="slide">
+          <div class="flex-row" style="position: absolute; bottom: 2.5rem; right: 2.5rem; justify-content: end; align-items: center;">
+            <img src="img/nuovo-logo_units.jpg" style="height: 3rem;"/>
+          </div>
+          <small class="aexp" style="position: absolute; left: 4rem; bottom: 4rem;">EXERCISE 1: DISCUSSION</small>
+          <div class="slide">
+            <div class="slide">
+              <small class="aexp">LIMITATIONS and IMPROVEMENTS</small>
+              <small style="margin-top: 3rem;"><ul>
+                <li style="margin-bottom: 0.6rem;"><b>Scalability</b> &rarr; clustering, distributed filesystem, outsourcing</li>
+                <small class="aexp">Single point of failure, limited resources (e.g. storage)</small>
+                <li style="margin-bottom: 0.6rem;"><b>Reliability</b> &rarr; redundancy, backup solutions</li>
+                <small class="aexp">Local storage, single copy of data</small>
+                <li style="margin-bottom: 0.6rem;"><b>No caching</b> &rarr; Redis, buffer drives</li>
+                <small class="aexp">Requests, database, files</small>
+              </ul></small> 
+            </div>
+          </div>
+        </section>
+
+        <!-- slide 10 -->
+				<section class="slide">
+          <div class="flex-row" style="position: absolute; bottom: 2.5rem; right: 2.5rem; justify-content: end; align-items: center;">
+            <img src="img/nuovo-logo_units.jpg" style="height: 3rem;"/>
+          </div>
+          <small class="aexp" style="position: absolute; left: 4rem; bottom: 4rem;">EXERCISE 1: TESTING</small>
+          <div class="slide">
+            <div class="slide">
+              <small class="aexp">LOAD TEST WITH LOCUST</small>
+              <img src="img/locust_code.png" style="width: 60rem;"/>
+            </div>
+          </div>
+        </section>
+
+        <!-- slide 11 -->
+				<section class="slide">
+          <div class="flex-row" style="position: absolute; bottom: 2.5rem; right: 2.5rem; justify-content: end; align-items: center;">
+            <img src="img/nuovo-logo_units.jpg" style="height: 3rem;"/>
+          </div>
+          <small class="aexp" style="position: absolute; left: 4rem; bottom: 4rem;">EXERCISE 1: TESTING</small>
+          <div class="slide">
+            <div class="slide">
+              <small class="aexp">LOAD TEST WITH LOCUST</small>
+              <small class="aexp muted">8 CONCURRENT USERS, 1 INSTANCE, MIXED FILESIZES</small>
+              <img src="img/RPS_u8_1i.png" style="width: 60rem;"/>
+            </div>
+          </div>
+        </section>
+
+        <!-- slide 12 -->
+				<section class="slide">
+          <div class="flex-row" style="position: absolute; bottom: 2.5rem; right: 2.5rem; justify-content: end; align-items: center;">
+            <img src="img/nuovo-logo_units.jpg" style="height: 3rem;"/>
+          </div>
+          <small class="aexp" style="position: absolute; left: 4rem; bottom: 4rem;">EXERCISE 1: TESTING</small>
+          <div class="slide">
+            <div class="slide">
+              <small class="aexp">LOAD TEST WITH LOCUST</small>
+              <small class="aexp muted">16 CONCURRENT USERS, 1 INSTANCE, MIXED FILESIZES</small>
+              <img src="img/RPS_u16_1i.png" style="width: 60rem;"/>
+            </div>
+          </div>
+        </section>
+
+        <!-- slide 13 -->
+				<section class="slide">
+          <div class="flex-row" style="position: absolute; bottom: 2.5rem; right: 2.5rem; justify-content: end; align-items: center;">
+            <img src="img/nuovo-logo_units.jpg" style="height: 3rem;"/>
+          </div>
+          <small class="aexp" style="position: absolute; left: 4rem; bottom: 4rem;">EXERCISE 1: TESTING</small>
+          <div class="slide">
+            <div class="slide">
+              <small class="aexp">LOAD TEST WITH LOCUST</small>
+              <small class="aexp muted">16 CONCURRENT USERS, 2 INSTANCES, MIXED FILESIZES</small>
+              <img src="img/RPS_u16_2i.png" style="width: 60rem;"/>
+            </div>
+          </div>
+        </section>
+
+        <!-- slide 14 -->
+				<section class="slide">
+          <div class="flex-row" style="position: absolute; bottom: 2.5rem; right: 2.5rem; justify-content: end; align-items: center;">
+            <img src="img/nuovo-logo_units.jpg" style="height: 3rem;"/>
+          </div>
+          <small class="aexp" style="position: absolute; left: 4rem; bottom: 4rem;">EXERCISE 1: CONCLUSIONS</small>
+          <div class="slide">
+            <div class="slide">
+              <small class="aexp">CHALLENGES</small>
+              <small style="margin-top: 3rem;"><ul>
+                <li style="margin-bottom: 0.6rem;">Guaranteeing <b>secure accessibility</b></li>
+                <small class="aexp">port mapping, SSL certificate, DNS configuration</small>
+                <li style="margin-bottom: 0.6rem;">Configuring <b>load balancing</b></li>
+                <small class="aexp">with instances spawnable on-the-fly</small>
+                <li style="margin-bottom: 0.6rem;">Obtaining <b>test results</b> due to Nextcloud's secure nature</li>
+                <small class="aexp">Rate limits, bruteforce protection, file locking</small>
+              </ul></small> 
+            </div>
+          </div>
+        </section>
+
+        <!------------------------------------->
+        <!-- END OF BASIC, START OF ADVANCED -->
+        <!------------------------------------->
+
+        <!-- slide 15 -->
+				<section class="slide">
+          <div class="flex-row" style="position: absolute; bottom: 2.5rem; right: 2.5rem; justify-content: end; align-items: center;">
+            <img src="img/nuovo-logo_units.jpg" style="height: 3rem;"/>
+          </div>
+          <small class="aexp" style="position: absolute; left: 4rem; bottom: 4rem;">EXERCISE 1A: GOAL</small>
+          <div class="slide">
+            <small class="aexp">Deploying a clustered storage system<br>extending the previous solution</small>
+            <small style="margin-top: 3rem;"><ul>
+              <li style="margin-bottom: 0.6rem;">Kubernetes</li>
+              <small class="aexp">Planning a basic working Kubernetes infrastructure with an understanding of all basic components</small>
+              <li style="margin-bottom: 0.6rem;">Cluster</li>
+              <small class="aexp">Running a cluster of a minimum of 1 node</small>
+              <li style="margin-bottom: 0.6rem;">Service compartimentalization</li>
+              <small class="aexp">Components in independent pods</small>
+              <li style="margin-bottom: 0.6rem;">Crash-proofness and self-healing</li>
+              <small class="aexp">With persistency across pod crashes</small>
+              <li style="margin-bottom: 0.6rem;">External accessibility</li>
+              <small class="aexp">Access to the cluster through IP or FQDN</small>
+            </ul></small> 
+          </div>
+        </section>
+
+        <!-- slide 16 -->
+				<section class="slide">
+          <div class="flex-row" style="position: absolute; bottom: 2.5rem; right: 2.5rem; justify-content: end; align-items: center;">
+            <img src="img/nuovo-logo_units.jpg" style="height: 3rem;"/>
+          </div>
+          <small class="aexp" style="position: absolute; left: 4rem; bottom: 4rem;">EXERCISE 1A: IMPLEMENTATION</small>
+          <div class="slide">
+            <small class="aexp">CHOSEN SOLUTION</small>
+            <div class="flex-row" style="align-items: center;">
+              <img src="img/nc.svg" style="height: 8rem;"/>
+              &nbsp;&nbsp;+&nbsp;&nbsp;
+              <img src="img/K3S.webp" style="height: 8rem;"/>
+            </div>
+          </div>
+        </section>
+
+        <!-- slide 17 -->
+				<section class="slide">
+          <div class="flex-row" style="position: absolute; bottom: 2.5rem; right: 2.5rem; justify-content: end; align-items: center;">
+            <img src="img/nuovo-logo_units.jpg" style="height: 3rem;"/>
+          </div>
+          <small class="aexp" style="position: absolute; left: 4rem; bottom: 4rem;">EXERCISE 1A: IMPLEMENTATION</small>
+          <div class="slide">
+            <small class="aexp">ARCHITECTURE TOPOLOGY</small>
+            <img src="img/nc_advanced.png" style="width: 75rem;"/>
+          </div>
+        </section>
+
+        <!-- slide 18 -->
+				<section class="slide">
+          <div class="flex-row" style="position: absolute; bottom: 2.5rem; right: 2.5rem; justify-content: end; align-items: center;">
+            <img src="img/nuovo-logo_units.jpg" style="height: 3rem;"/>
+          </div>
+          <small class="aexp" style="position: absolute; left: 4rem; bottom: 4rem;">EXERCISE 1A: DISCUSSION</small>
+          <div class="slide">
+            <div class="slide">
+              <small class="aexp">IMPLEMENTATION CHOICES</small>
+              <small style="margin-top: 3rem;"><ul>
+                <li style="margin-bottom: 0.6rem;">K3S + Helm chart</li>
+                <small class="aexp">Lightweight Kubernetes distribution with pre-configured containers @ Proxmox </small>
+                <li style="margin-bottom: 0.6rem;">nginx</li>
+                <small class="aexp">Cluster-local configurable reverse proxy</small>
+                <li style="margin-bottom: 0.6rem;">PostgreSQL</li>
+                <small class="aexp">Efficient and ready for further upscaling</small>
+              </ul></small> 
+            </div>
+          </div>
+        </section>
+
+        <!-- slide 19 -->
+				<section class="slide">
+          <div class="flex-row" style="position: absolute; bottom: 2.5rem; right: 2.5rem; justify-content: end; align-items: center;">
+            <img src="img/nuovo-logo_units.jpg" style="height: 3rem;"/>
+          </div>
+          <small class="aexp" style="position: absolute; left: 4rem; bottom: 4rem;">EXERCISE 1A: DISCUSSION</small>
+          <div class="slide">
+            <div class="slide">
+              <small class="aexp">ADDITIONAL ARCHITECTURAL CHOICES</small>
+              <small class="aexp muted">w.r.t. the Docker solution</small>
+              <small style="margin-top: 3rem;"><ul>
+                <li style="margin-bottom: 0.6rem;">Locally-bound persistent storage</li>
+                <small class="aexp">Provisioned manually with Persistent Volume Claims</small>
+                <li style="margin-bottom: 0.6rem;">External access through Load Balancer</li>
+                <small class="aexp">serving as an HTTP(S) interface to the cluster</small>
+              </ul></small> 
+            </div>
+          </div>
+        </section>
+
+        <!-- slide 20 -->
+				<section class="slide">
+          <div class="flex-row" style="position: absolute; bottom: 2.5rem; right: 2.5rem; justify-content: end; align-items: center;">
+            <img src="img/nuovo-logo_units.jpg" style="height: 3rem;"/>
+          </div>
+          <small class="aexp" style="position: absolute; left: 4rem; bottom: 4rem;">EXERCISE 1A: DISCUSSION</small>
+          <div class="slide">
+            <div class="slide">
+              <small class="aexp">LIMITATIONS and IMPROVEMENTS</small>
+              <small style="margin-top: 3rem;"><ul>
+                <li style="margin-bottom: 0.6rem;"><b>Performance scalability</b> &rarr; bigger cluster on dedicated hardware</li>
+                <small class="aexp">with more than 1 node, on bare metal</small>
+                <li style="margin-bottom: 0.6rem;"><b>Storage scalability</b> &rarr; distributed filesystem, outsourcing</li>
+                <small class="aexp">Limited resources, not scalable independently to the rest of the system</small>
+                <li style="margin-bottom: 0.6rem;"><b>Storage reliability</b> &rarr; redundancy, backup solutions</li>
+                <small class="aexp">Local storage, single copy of data</small>
+                <li style="margin-bottom: 0.6rem;"><b>No caching</b> &rarr; Redis, buffer drives</li>
+                <small class="aexp">Requests, database, files</small>
+              </ul></small> 
+            </div>
+          </div>
+        </section>
+
+        <!-- slide 21 -->
+				<section class="slide">
+          <div class="flex-row" style="position: absolute; bottom: 2.5rem; right: 2.5rem; justify-content: end; align-items: center;">
+            <img src="img/nuovo-logo_units.jpg" style="height: 3rem;"/>
+          </div>
+          <small class="aexp" style="position: absolute; left: 4rem; bottom: 4rem;">EXERCISE 1A: DISCUSSION</small>
+          <div class="slide">
+            <div class="slide">
+              <small class="aexp">ENCHANCEMENTS</small>
+              <small class="aexp muted">w.r.t. the Docker solution</small>
+              <small style="margin-top: 3rem;"><ul>
+                <li style="margin-bottom: 0.6rem;">Ease of deployment</li>
+                <small class="aexp">thanks to the orchestration operated by Kubernetes</small>
+                <li style="margin-bottom: 0.6rem;">Theoretical scalability</li>
+                <small class="aexp">by configuring more replicas to be maintained</small>
+                <li style="margin-bottom: 0.6rem;">Failproofness</li>
+                <small class="aexp">due to Kubernetes's self healing and desidered state preservation</small>
+              </ul></small> 
+            </div>
+          </div>
+        </section>
+
+         <!-- slide 22 -->
+				<section class="slide">
+          <div class="flex-row" style="position: absolute; bottom: 2.5rem; right: 2.5rem; justify-content: end; align-items: center;">
+            <img src="img/nuovo-logo_units.jpg" style="height: 3rem;"/>
+          </div>
+          <small class="aexp" style="position: absolute; left: 4rem; bottom: 4rem;">EXERCISE 1A: CONCLUSIONS</small>
+          <div class="slide">
+            <div class="slide">
+              <small class="aexp">CHALLENGES</small>
+              <small style="margin-top: 3rem;"><ul>
+                <li style="margin-bottom: 0.6rem;">Understanding and setting up Kubernetes</li>
+                <small class="aexp">spinning up virtual machines and clustering them</small>
+                <li style="margin-bottom: 0.6rem;">Configuring external access</li>
+                <small class="aexp">attempted through Ingress, then opted for built-in ServiceLB</small>
+              </ul></small> 
+            </div>
+          </div>
+        </section>
+
+        <!-- slide 23 -->
+				<section class="slide">
+          <div class="flex-row" style="position: absolute; bottom: 2.5rem; right: 2.5rem; justify-content: end; align-items: center;">
+            <img src="img/nuovo-logo_units.jpg" style="height: 3rem;"/>
+          </div>
+          <small class="aexp" style="position: absolute; left: 4rem; bottom: 4rem;">EXERCISE 2A: GOAL</small>
+          <div class="slide">
+            <small class="aexp">Benchmarking MPI latency and collective operations timing</small>
+            <small class="aexp muted">Changing pods affinity and comparing results</small>
+            <small style="margin-top: 3rem;"><ul>
+              <li style="margin-bottom: 0.6rem;">Inter-pod communication</li>
+              <small class="aexp">Tested with Flannel</small>
+              <li style="margin-bottom: 0.6rem;">Establishing MPI inter-process communication</li>
+              <small class="aexp">With the MPI operator by Kubeflow</small>
+              <li style="margin-bottom: 0.6rem;">Performing benchmarks</li>
+              <small class="aexp">Using the OSU benchmarking suite</small>
+            </ul></small> 
+          </div>
+        </section>
+
+        <!-- slide 24 -->
+				<section class="slide">
+          <div class="flex-row" style="position: absolute; bottom: 2.5rem; right: 2.5rem; justify-content: end; align-items: center;">
+            <img src="img/nuovo-logo_units.jpg" style="height: 3rem;"/>
+          </div>
+          <small class="aexp" style="position: absolute; left: 4rem; bottom: 4rem;">EXERCISE 2A: SETUP</small>
+          <div class="slide">
+            <small style="margin-top: 3rem;"><ul>
+              <li style="margin-bottom: 0.6rem;">OCI/Docker containers</li>
+              <small class="aexp">Custom made, for building and performing the OSU benchmark suite</small>
+              <li style="margin-bottom: 0.6rem;">MPIJobs scheduled</li>
+              <small class="aexp">To create the needed resources, launcher and worker pods, and to dispatch the wanted task</small>
+              <li style="margin-bottom: 0.6rem;">Launcher pod logs</li>
+              <small class="aexp">To retrieve the results</small>
+            </ul></small> 
+          </div>
+        </section>
+
+        <!-- slide 25 -->
+				<section class="slide">
+          <div class="flex-row" style="position: absolute; bottom: 2.5rem; right: 2.5rem; justify-content: end; align-items: center;">
+            <img src="img/nuovo-logo_units.jpg" style="height: 3rem;"/>
+          </div>
+          <small class="aexp" style="position: absolute; left: 4rem; bottom: 4rem;">EXERCISE 2A: SETUP</small>
+          <div class="slide">
+            <small class="aexp">MPIJob</small>
+            <small class="aexp muted">Built from the mpioperator/openmpi:latest image</small>
+            <small class="aexp muted">and pushed on a local registry on each involved node</small>
+            <img src="img/mpijob.png" style="width: 75rem;"/>
+          </div>
+        </section>
+
+        <!-- slide 26 -->
+				<section class="slide">
+          <div class="flex-row" style="position: absolute; bottom: 2.5rem; right: 2.5rem; justify-content: end; align-items: center;">
+            <img src="img/nuovo-logo_units.jpg" style="height: 3rem;"/>
+          </div>
+          <small class="aexp" style="position: absolute; left: 4rem; bottom: 4rem;">EXERCISE 2A: RESULTS</small>
+          <div class="slide">
+            <small class="aexp">LATENCY</small>
+            <img src="img/latency.png" style="width: 50%;"/>
+          </div>
+        </section>
+
+        <!-- slide 27 -->
+				<section class="slide">
+          <div class="flex-row" style="position: absolute; bottom: 2.5rem; right: 2.5rem; justify-content: end; align-items: center;">
+            <img src="img/nuovo-logo_units.jpg" style="height: 3rem;"/>
+          </div>
+          <small class="aexp" style="position: absolute; left: 4rem; bottom: 4rem;">EXERCISE 2A: RESULTS</small>
+          <div class="slide">
+            <small class="aexp">BROADCAST COLLECTIVE</small>
+            <img src="img/bcast.png" style="width: 50%;"/>
+          </div>
+        </section>
+
+        <!-- slide 28 -->
+				<section class="slide">
+          <div class="flex-row" style="position: absolute; bottom: 2.5rem; right: 2.5rem; justify-content: end; align-items: center;">
+            <img src="img/nuovo-logo_units.jpg" style="height: 3rem;"/>
+          </div>
+          <small class="aexp" style="position: absolute; left: 4rem; bottom: 4rem;">EXERCISE 2A: CONSIDERATIONS</small>
+          <div class="slide">
+            <small style="margin-top: 3rem;"><ul>
+              <li style="margin-bottom: 0.6rem;">Consistently higher speeds in same-node communication</li>
+              <small class="aexp">Pods share the same internal network</small>
+              <li style="margin-bottom: 0.6rem;">Higher overhead even with nodes hosted on the same machine</li>
+              <small class="aexp">Allegedly introduced by Flannel creating a VXLAN tunnel between nodes</small>
+            </ul></small> 
+          </div>
+        </section>
+
+        <!-- slide 29 -->
+				<section class="slide">
+          <div class="flex-row" style="position: absolute; bottom: 2.5rem; right: 2.5rem; justify-content: end; align-items: center;">
+            <img src="img/nuovo-logo_units.jpg" style="height: 3rem;"/>
+          </div>
+          <small class="aexp" style="position: absolute; left: 4rem; bottom: 4rem;">EXERCISE 2A: CONCLUSIONS</small>
+          <div class="slide">
+            <div class="slide">
+              <small class="aexp">CHALLENGES</small>
+              <small style="margin-top: 3rem;"><ul>
+                <li style="margin-bottom: 0.6rem;">Dispatching MPI jobs with the MPI operator</li>
+                <small class="aexp">the MPI operator bears improvable documentation</small>
+                <li style="margin-bottom: 0.6rem;">Setting up local registries</li>
+                <small class="aexp">in order for nodes to be able to share the custom built Docker images</small>
+              </ul></small> 
+            </div>
+          </div>
+        </section>
+
+        <!-- slide 30 -->
+				<section class="slide">
+          <div class="flex-row" style="position: absolute; bottom: 2.5rem; right: 2.5rem; justify-content: end; align-items: center;">
+            <img src="img/nuovo-logo_units.jpg" style="height: 3rem;"/>
+          </div>
+          <small class="aexp" style="position: absolute; left: 4rem; bottom: 4rem;">THANK YOU FOR YOUR ATTENTION</small>
+          <div class="slide">
+          </div>
+        </section>
+			</div>
+		</div>
+
+		<script src="dist/reveal.js"></script>
+		<script src="plugin/notes/notes.js"></script>
+    <script src="plugin/math/math.js"></script>
+		<script src="plugin/markdown/markdown.js"></script>
+		<script src="plugin/highlight/highlight.js"></script>
+		<script>
+			Reveal.initialize({
+				hash: true,
+        disableLayout: true,
+				plugins: [ RevealMarkdown, RevealHighlight, RevealNotes, RevealMath.KaTeX ]
+			});
+		</script>
+	</body>
+</html>
